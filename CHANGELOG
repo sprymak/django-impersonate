@@ -1,6 +1,12 @@
 Changes
 -------
 
+1.4.0 (2019-01-12)
+
+- Officially support Python 3.6+ and Django 1.11+
+- "friendly_name" function now users USERNAME_FIELD. (Pull Request #30)
+- Add admin support for exception NotSupportedError. (Pull Request #34)
+
 1.3 (2017-12-14)
 
 - Django 2.0 compatable (Issue #46)

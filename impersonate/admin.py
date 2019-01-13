@@ -2,6 +2,7 @@
 import logging
 from django.contrib import admin
 from django.utils.html import format_html
+from django.db.utils import NotSupportedError
 
 from .settings import settings
 from .models import ImpersonationLog
@@ -20,7 +21,7 @@ def friendly_name(user):
     name = None
     if hasattr(user, 'get_full_name'):
         name = user.get_full_name()
-    return name or user.username
+    return name or getattr(user, getattr(User, 'USERNAME_FIELD', 'username'))
 
 
 class SessionStateFilter(admin.SimpleListFilter):
@@ -79,7 +80,7 @@ class ImpersonatorFilter(admin.SimpleListFilter):
                     flat=True,
                 ).distinct('impersonator_id')
             )
-        except NotImplementedError:
+        except (NotSupportedError, NotImplementedError):
             # Unit tests use sqlite db backend which doesn't support distinct.
             qs = model_admin.get_queryset(request).only('impersonator_id')
             ids = set([x.impersonator_id for x in qs])
